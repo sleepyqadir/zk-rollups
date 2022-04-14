@@ -15,7 +15,7 @@
  * along with semaphorejs.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-pragma solidity 0.5.11;
+pragma solidity ^0.8.0;
 
 import "./Hasher.sol";
 import "./Whitelist.sol";

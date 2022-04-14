@@ -1,3 +1,5 @@
+//SPDX-License-Identifier: Unlicense
+
 /*
  * Hasher object to abstract out hashing logic
  * to be shared between multiple files
@@ -10,14 +12,10 @@
  * as the name is changed.
  */
 
-pragma solidity 0.5.11;
+pragma solidity ^0.8.0;
 
-library CircomLib {
-  function MiMCSponge(uint256 xL_in, uint256 xR_in, uint256 k)
-    public
-    pure
-    returns (uint256 xL, uint256 xR);
-}
+
+import "./MiMc.sol";
 
 contract Hasher {
   function hashMulti(uint256[] memory array, uint256 key)
@@ -25,13 +23,41 @@ contract Hasher {
     pure
     returns (uint256)
   {
+
+    /* 
+
+    The prime field we work in when programming zkSNARKs is defined by
+    the elliptic curve chosen to implement a zkSNARK proving system.
+    To be more precise, the prime p which represents the field modulus
+    is defined by the group order r of the elliptic curve.
+    This will become clearer after elliptic curves have been introduced in the following section.
+
+    Ethereum provides pre-compiled contracts for the BN128 (also known as BN254) curve,
+    which enable cheap curve operation on the blockchain. Operations inside a zkSNARK program,
+    constructed using that curve, will wrap around the prime:
+
+    p = 21888242871839275222246405745257275088548364400416034343698204186575808495617
+
+    which equates to the group order r of BN128.
+    Hence, if we want to be able to verify zkSNARKs on Ethereum,
+    we use this p as the modulus in ZoKrates programs.
+   
+   
+    */
+
     uint256 k = 21888242871839275222246405745257275088548364400416034343698204186575808495617;
     uint256 R = 0;
     uint256 C = 0;
 
     for (uint256 i = 0; i < array.length; i++) {
-      R = addmod(R, array[i], k);
-      (R, C) = CircomLib.MiMCSponge(R, C, key);
+      
+      /*
+      
+       equation a + b = c (mod p)
+      
+       */
+       R = addmod(R, array[i], k); 
+      (R, C) = MiMC.MiMCSponge(R, C, key);
     }
 
     return R;

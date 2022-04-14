@@ -4,7 +4,7 @@
   "license": "GPLv3",
   "author": "Elliot Stefansson <stealthy-ai@protonmail.com>",
   "dependencies": {
-    "@openzeppelin/contracts": "^2.4.0",
+    "@openzeppelin/contracts": "^2.5.1",
     "@truffle/artifactor": "^4.0.44",
     "@types/mocha": "^5.2.7",
     "circom": "^0.0.35",
